@@ -1,0 +1,24 @@
+?plot: then show you things about "plot"
+
+cars[2,3] <- NA
+cars[2,3]
+#output: NA 
+
+par(mfrow = c(1,1))
+hist(cars$weightlbs)
+#should really figure out what $ means in this case, like the one in Excel
+
+summary(cars$weightlbs)
+
+mi <- min(cars$weightlbs)
+ma <- max(cars$weightlbs)
+minimaxweights <- (cars$weightlbs - mi)/(ma-mi))
+#normalization
+
+s <- sd(cars$weightlbs)
+m <- mean(cars$weightlbs)
+zscoreweight <- (cars$weightlbs-m)/s
+
+par(mfrow=c(1,2))
+hist(cars$weightlbs, breaks = 20)
+hist(cars$mpg)
