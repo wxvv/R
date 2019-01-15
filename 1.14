@@ -1,0 +1,63 @@
+# We are using table Churn this time
+
+## first thing is proportions
+prop.churn <- sum(churn$Churn == "True.")/length(churn$Churn.)
+prop.churn
+
+## bar chart for variable churn 
+barplot(sum.churn, ylim=c(0,3000), main= "bar graph test",
+        col="lightblue")
+box(which ="plot",lty="solid",col="black")
+
+graphics::barplot(sum.churn, ylim=c(0,3000), main= "bar graph test", col="lightblue")
+
+## making a contingency table
+counts <- table(churn$Churn, churn$Int.l.Plan,dnn=c("Churn","int.plan"))
+counts
+
+## overlaid bar charts, can see ratio
+barplot(counts, legends=rownames(counts),
+        col=c("blue","orange"),ylim=c(0,3300),
+        ylab="counts",xlab="int.plan")
+box(which ="plot",lty="solid",col="black")
+
+## create a table w sums for 2 variables
+sumtable <- addmargins(counts, FUN=sum)
+sumtable
+
+## create a table of proportions over rows
+row.margins <- round(prop.table(counts, margin=1),4*100)
+row.margins
+aaa <- round(12.456678867,4) 
+
+hist(churn$CustServ.Calls, xlim=c(0,10),col="lightblue",ylab="count",xlab="CSC",
+     main="hist of data")
+     
+## ggplot to overlaid bar charts normalize
+library(ggplot2)
+ggplot2::ggplot()+geom_bar(data=churn,
+                          aes(x=factor(churn$CustServ.Calls),
+                              fill=factor(churn$Churn)),position="fill")+
+      scale_x_discrete("CSC")+
+      scale_y_continuous("Percent")+
+      guides(fill=guide_legend(title="ch"))+
+      scale_fill_manual(values=c("blue","orange"))
+      
+## ggplot to overlaid bar charts
+ggplot2::ggplot()+geom_bar(data=churn,
+                           aes(x=factor(churn$CustServ.Calls),
+                               fill=factor(churn$Churn.)),position="stack")+
+  scale_x_discrete("CSC")+
+  scale_y_continuous("Percent")+
+  guides(fill=guide_legend(title="ch"))+
+  scale_fill_manual(values=c("lightblue","orange"))
+  
+days <- cbind(churn$Day.Mins,churn$Day.Charge,churn$Day.Calls)
+round(cor(days),5)
+
+minscallstest <- cor.test(churn$Day.Mins,churn$Day.Calls)  
+minscallstest
+
+## scatter plot
+plot(churn$Eve.Mins, churn$Day.Mins,
+     col=ifelse(churn$Churn == "True.","red","blue"))
