@@ -1,0 +1,45 @@
+## 2.4 covered many aspects...
+
+mydata <- read.csv('http://static.lib.virginia.edu/statlab/materials/data/mediationData.csv')
+model1.0 <- lm(Y~X, mydata)
+summary(model1.0)
+model.M <- lm(M~X,mydata)
+summary(model.M)
+
+# MULT REG BTW X&Y
+model.Y <- lm(Y~X+M, mydata)
+summary(model.Y)
+# so this assumption is correct
+
+# y=a1x+a2m+a0, a2=0.6355, a1=0.0396
+# effect of x has decreased a lot
+library(mediation)
+results <- mediate(model.M, model.Y, treat='X', mediator='M',
+                  boot=TRUE, sims=100)
+summary(results)
+
+# ClassifyRisk
+# pick row, column in classifyrisk
+cr <- ClassifyRisk
+risk2 <- cr[c(51,65,79,87,124,141,150,162),c(5,1,4,6)]
+risk2$married.I <- ifelse(risk2$marital_status == "married",1,0)
+risk2$single.I <- ifelse(risk2$marital_status == "single",1,0)
+
+# adult
+adult <- Adult2_Test
+adult[1:500,]
+unique(adult$Income)
+unique(adult$Gender)
+unique(adult$Race)
+unique(adult$Work.Class)
+unique(adult$Marital.status)
+
+for (i in 1:length(adult$Income)) {
+  if(adult$Income[i] == ">50k")
+    adult$Income_g50k[i] <- 1
+  if(adult$Gender[i] == "Male")
+    adult$GenderI <- 1
+  if(adult$Race[i] == "White")
+    adult$RaceIW <- 1
+}
+
