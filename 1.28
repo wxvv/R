@@ -1,0 +1,90 @@
+# I forgot to add this day's materials, so here they are
+
+
+choose <- runif(length(adult$Age_mm), min=0, max=1) 
+# choose[c(1,2,5)] # single
+# tail(choose) # last
+# head(choose) 
+
+training <- adult[choose <= 0.75,] # choose 75% of dataset
+testing <- adult[choose > 0.75,]
+adult[1:5, c(1,2,3)]
+training[1:5,c(1,2,3)]
+testing[1:5,c(1,2,3)]
+
+# cereal hw rating = b0+b1*fiber
+c <- cereals
+lm1 <- lm(c$Rating ~ c$Fiber) 
+summary(lm1)
+anova(lm1)
+plot(c$Fiber, c$Rating, xlab="Fiber",ylab="Rating",
+     main = "Fiber and Rating")  
+abline(lm1, col = "red")
+
+x <- c(2,2,3,4,4,5,6,7,8,9)
+y <- c(10,11,12,13,14,15,20,18,22,25)
+
+o.data <- data.frame(cbind("Time"=x, "Distance"=y))
+lm2 <- lm(Distance ~ Time, data=o.data) 
+a2 <- anova(lm2)
+
+r2.2 <- a2$`Sum Sq`[1]/(a2$`Sum Sq`[1]+a2$`Sum Sq`[2])
+mse <- a2$`Mean Sq`[2]
+s <- sqrt(mse)
+
+hatvalues(lm2)
+# add an outlier and see how it chnages leverage
+hardcore <- cbind("Time"=16, "Distance"=39)
+o.data <- rbind(o.data,hardcore)
+lm3 <- lm(Distance~Time, data=o.data)
+summary(lm3)
+anova(lm3)
+hatvalues(lm3)
+
+rstandard(lm3)
+cooks.distance(lm3)
+
+# add another entry
+o.data[11,] <- cbind("Time"=5, "Distance"=20)
+o.data <- rbind(o.data,hardcore)
+lm4 <- lm(Distance~Time, data=o.data)
+summary(lm4)
+anova(lm4)
+hatvalues(lm4)
+
+rstandard(lm4)
+cooks.distance(lm4)
+ 
+par(mfrow = c(2,2))
+plot(lm4)
+
+par(mfrow = c(1,1))
+plot(lm2$fitted.values, rstandard(lm2))
+abline(0,0)
+
+# multiple regression and 3D plot
+data <- data.frame(Rating = c$Rating, Sugars = c$Sugars,
+                   Fiber = c$Fiber)
+
+library(scatterplot3d)
+sp <- scatterplot3d(z=sort(c$Rating),y=c$Sugars,x=c$Fiber,
+                    xlab="Fiber",zlab="Rating", main = "3D plot")
+
+# multiple reg 1
+mreg1 <- lm(c$Rating ~ c$Sugar+c$Fiber, data=c)
+summary(mreg1)
+ma1 = anova(mreg1)
+ma1
+
+# knn: specifically for classificaton
+new <- c(0.05, 0.025)
+A <- c(0.0467, 0.02471)
+B <- c(0.0533, 0.1912)
+C <- c(0.0917, 0.2794)
+data <-rbind(A,B,C)
+dimnames(data) <- list(c("Dark","Medium","Light"), c("Age(MMN)","Na/K(MMN)"))
+trueclass <- c("Dark","Medium","Light")
+library(class)
+knn <- knn(data,new, cl=trueclass,k=3, prob=TRUE)
+knn
+
